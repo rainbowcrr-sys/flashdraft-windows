@@ -15,7 +15,7 @@ UninstallDisplayIcon={app}\FlashDraft.Desktop.exe
 WizardStyle=modern
 
 [Files]
-Source: "..\publish\*"; DestDir: "{app}"; Flags: ignoreversion recursedirs createallsubdirs
+Source: "..\publish\*"; DestDir: "{app}"; Flags: ignoreversion recursedirs
 Source: "..\assets\flashdraft-icon.ico"; DestDir: "{app}"; Flags: ignoreversion
 
 [Icons]

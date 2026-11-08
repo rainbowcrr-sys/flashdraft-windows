@@ -41,6 +41,8 @@ jobs:
           } else {
             Write-Host "::warning::Inno Setup unavailable; only the portable zip is produced"
           }
+          # A compiler failure must not block the portable package and the release.
+          exit 0
       - name: Portable zip
         shell: pwsh
         run: Compress-Archive -Path ./publish/* -DestinationPath ./FlashDraft-Windows-x64-Portable.zip
