@@ -87,7 +87,7 @@ public partial class MainViewModel : ObservableObject
         {
             // Adjustable: UiRefreshMs throttling can be added here if the UI
             // receives more snapshots than it can paint comfortably.
-            await Dispatcher.UIThread.InvokeAsync(() => Apply(snapshot)).ConfigureAwait(false);
+            await Dispatcher.UIThread.InvokeAsync(() => Apply(snapshot));
         }
     }
 
