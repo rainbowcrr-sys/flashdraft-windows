@@ -30,7 +30,8 @@ jobs:
           $iscc = Join-Path ${env:ProgramFiles(x86)} "Inno Setup 6\ISCC.exe"
           if (-not (Test-Path $iscc)) { choco install innosetup -y --no-progress --limit-output }
           if (Test-Path $iscc) {
-            & $iscc packaging\installer.iss
+            & $iscc packaging\installer.iss 2>&1 | Tee-Object -Variable isccOut
+            if ($LASTEXITCODE -ne 0) { $isccOut | ForEach-Object { Write-Host "::error::ISCC: $_" } }
           } else {
             Write-Host "::warning::Inno Setup unavailable; only the portable zip is produced"
           }
@@ -57,6 +58,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
           pattern: flashdraft-*
@@ -65,9 +67,13 @@ jobs:
       - name: Publish build artifacts to a GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
         shell: bash
         run: |
-          set -euo pipefail
+          set +e
+          set +o pipefail
+          {
+          set -eu
           mapfile -t FILES < <(find dist -type f -print)
           if [ "${#FILES[@]}" -eq 0 ]; then
             echo "::error::No build artifacts were downloaded"
@@ -101,3 +107,10 @@ jobs:
             gh release create "$TAG" "${ARGS[@]}" --title "$TITLE" --notes "$NOTES" "${FILES[@]}"
           fi
           echo "Published ${#FILES[@]} file(s) to release $TAG"
+          } > release.log 2>&1
+          status=$?
+          cat release.log
+          if [ "$status" -ne 0 ]; then
+            tail -30 release.log | while IFS= read -r line; do echo "::error::$line"; done
+            exit "$status"
+          fi

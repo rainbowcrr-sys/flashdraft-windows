@@ -10,7 +10,6 @@ OutputBaseFilename=FlashDraft-Windows-x64-Setup
 OutputDir=..
 Compression=lzma2
 SolidCompression=yes
-ArchitecturesInstallIn64BitMode=x64compatible
 DisableProgramGroupPage=yes
 UninstallDisplayIcon={app}\FlashDraft.Desktop.exe
 WizardStyle=modern
