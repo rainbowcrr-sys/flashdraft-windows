@@ -1,0 +1,54 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="FlashDraft.App.MainWindow"
+        Width="900" Height="580"
+        MinWidth="720" MinHeight="460"
+        Title="FlashDraft">
+    <Grid RowDefinitions="Auto,*" Margin="18">
+        <TextBlock Grid.Row="0"
+                   Text="FlashDraft"
+                   FontSize="22"
+                   FontWeight="SemiBold"
+                   Margin="0,0,0,14" />
+
+        <TabControl Grid.Row="1">
+            <TabItem Header="Transfer">
+                <Grid RowDefinitions="Auto,Auto,Auto,Auto,*" Margin="8">
+                    <TextBlock Grid.Row="0" Text="Connection code" Margin="0,0,0,6" />
+                    <TextBox Grid.Row="1"
+                             Text="{Binding ConnectionCode}"
+                             Watermark="flashdraft://..."
+                             Margin="0,0,0,12" />
+
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="10" Margin="0,0,0,12">
+                        <Button Content="Generate code" Command="{Binding GenerateCodeCommand}" />
+                        <Button Content="Start" Command="{Binding StartCommand}" />
+                        <Button Content="Cancel" Command="{Binding CancelCommand}" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="3" Orientation="Horizontal" Spacing="18" Margin="0,0,0,10">
+                        <TextBlock Text="{Binding StatusText}" />
+                        <TextBlock Text="{Binding SpeedText}" />
+                    </StackPanel>
+
+                    <Grid Grid.Row="4" RowDefinitions="Auto,*">
+                        <ProgressBar Grid.Row="0"
+                                     Minimum="0" Maximum="100"
+                                     Value="{Binding ProgressPercent}"
+                                     Height="14"
+                                     Margin="0,0,0,10" />
+                        <ListBox Grid.Row="1" ItemsSource="{Binding Devices}" />
+                    </Grid>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="About">
+                <ScrollViewer Margin="8">
+                    <TextBlock Text="{Binding AboutText}"
+                               TextWrapping="Wrap"
+                               LineSpacing="4" />
+                </ScrollViewer>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>

@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <!-- Adjustable: move to the newest stable Windows TFM when available. -->
+    <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="11.2.0" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.2.0" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Adjustable: replace with PackageReference Include="FlashDraft.Core" Version="0.1.0" after the first NuGet release. -->
+    <ProjectReference Include="..\..\vendor\FlashDraft.Core\FlashDraft.Core.csproj" />
+  </ItemGroup>
+</Project>
