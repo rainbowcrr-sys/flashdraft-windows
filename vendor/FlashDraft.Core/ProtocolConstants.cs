@@ -47,6 +47,21 @@ public static class ProtocolConstants
 
     /// <summary>Adjustable: QR error correction level is Medium (M).</summary>
     public const string QrErrorCorrectionLevel = "M";
+
+    /// <summary>Adjustable: public STUN server used to obtain a reflexive address.</summary>
+    public const string DefaultStunHost = "stun.l.google.com";
+    public const int DefaultStunPort = 19302;
+
+    /// <summary>Adjustable: UDP port used for WAN hole punching and data.</summary>
+    public const int WanDataPort = 45792;
+
+    /// <summary>Adjustable: WAN chunks stay below the typical path MTU to avoid IP fragmentation.</summary>
+    public const int WanChunkSize = 1000;
+
+    public const int UdpAckTimeoutMs = 600;
+    public const int UdpMaxRetries = 6;
+    public const int ConnectionCodeTtlMinutes = 5;
+    public const uint StunMagicCookie = 0x2112A442;
 }
 
 /// <summary>Frame types carried in the header.</summary>

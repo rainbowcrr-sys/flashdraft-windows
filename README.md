@@ -27,6 +27,21 @@ Installers are unsigned at zero cost. Every release ships a SHA-256 checksum. Wi
 
 安装包暂不签名，随版本提供 SHA-256 校验和。若出现 SmartScreen 提示，可先校验和，再选择「更多信息」→「仍要运行」。
 
+## How to transfer a file / 如何传输文件
+
+1. Both peers click "Generate my code" and exchange the two `flashdraft://` codes out of band (QR, paste or chat). Each code contains an ephemeral public key, LAN candidates, a STUN reflexive address, a one-time token and a five-minute expiry.
+   两端各自点击「生成我的码」，并通过带外渠道（二维码、粘贴或聊天）互相交换 `flashdraft://` 连接码。每个码含临时公钥、内网候选地址、STUN 反射地址、一次性 token 与五分钟过期时间。
+2. Paste the peer's code into "Peer offer code" and click "Bind peer" on both sides. This derives the same session id and directional keys from the two ephemeral key pairs.
+   把对端的码粘进「对端连接码」，两端各自点击「绑定对端」，由两对临时密钥派生出相同的会话 ID 与双向密钥。
+3. On the receiving peer set a destination directory and click "Wait for transfer". On the sending peer set a source file and click "Send file".
+   接收端设置目标目录后点「等待传输」，发送端设置源文件后点「发送文件」。
+4. For a LAN leave "WAN mode" off (TCP). For the public Internet switch "WAN mode" on at both ends: the sender punches a UDP hole toward the reflexive address in the peer's code, then encrypted 1 KiB chunks flow with ACK and retransmission. There is no signaling server and no automatic WAN discovery; symmetric NAT may require a fresh code or manual port mapping.
+   局域网请关闭「公网模式」（走 TCP）。跨公网时两端都勾选「公网模式」：发送端向对端码里的反射地址发起 UDP 打洞，随后以 1 KiB 加密分块配合 ACK 与重传传输。本项目没有信令服务器，公网无法自动发现对端；对称 NAT 可能需要重新交换连接码或手动端口映射。
+5. "Loopback self test" runs two in-process peers on one device and really transfers a generated file over loopback TCP. It needs no second device and no network.
+   「单机自测」会在同一台设备的一个进程里起两个对等端，通过本机回环 TCP 真实传输一个生成的文件，不需要第二台设备，也不需要网络。
+
+See the flashdraft-core README for the full protocol description. 完整协议说明见 flashdraft-core 仓库 README。
+
 ## PCL notice / PCL 声明
 
 FlashDraft's user interface design is inspired by Plain Craft Launcher (PCL) by 龙腾猫跃 (Meloong-Git/PCL). This project contains no PCL source code, images, logos, or fonts. FlashDraft is an independent file-transfer tool and is not affiliated with, endorsed by, or officially related to PCL or its author. PCL and all related rights remain with the original author. See https://github.com/Meloong-Git/PCL/blob/main/LICENCE.

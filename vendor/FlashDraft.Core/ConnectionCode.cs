@@ -22,6 +22,7 @@ public static class ConnectionCode
         [JsonPropertyName("stun")] public string? Stun { get; set; }
         [JsonPropertyName("exp")] public long Exp { get; set; }
         [JsonPropertyName("tok")] public string Tok { get; set; } = string.Empty;
+        [JsonPropertyName("wan")] public string? Wan { get; set; }
     }
 
     public static string Encode(TransferSession session)
@@ -72,6 +73,57 @@ public static class ConnectionCode
             FromBase64Url(payload.Tok),
             payload.Lan,
             payload.Stun);
+    }
+
+    /// <summary>Encodes a manually exchanged offer into a flashdraft:// URI.</summary>
+    public static string EncodeOffer(SessionOffer offer)
+    {
+        var payload = new Payload
+        {
+            V = ProtocolConstants.ProtocolVersion,
+            Sid = offer.SessionId.ToString("D"),
+            Pk = ToBase64Url(offer.OffererPublicKey),
+            Lan = offer.LanCandidates.ToArray(),
+            Wan = offer.ReflexiveEndpoint,
+            Exp = offer.ExpiresAt.ToUnixTimeMilliseconds(),
+            Tok = ToBase64Url(offer.OneTimeToken),
+        };
+
+        byte[] json = JsonSerializer.SerializeToUtf8Bytes(payload);
+        return $"{ProtocolConstants.UriScheme}://{ToBase64Url(Compress(json))}";
+    }
+
+    /// <summary>Decodes an offer and rejects expired codes.</summary>
+    public static SessionOffer DecodeOffer(string code, DateTimeOffset now)
+    {
+        if (string.IsNullOrWhiteSpace(code) ||
+            !code.StartsWith($"{ProtocolConstants.UriScheme}://", StringComparison.Ordinal))
+        {
+            throw new FormatException("Not a FlashDraft offer code.");
+        }
+
+        string encoded = code.Substring($"{ProtocolConstants.UriScheme}://".Length);
+        Payload payload = JsonSerializer.Deserialize<Payload>(Decompress(FromBase64Url(encoded)))
+                          ?? throw new FormatException("Empty offer payload.");
+
+        if (payload.V != ProtocolConstants.ProtocolVersion)
+        {
+            throw new FormatException("Unsupported offer version.");
+        }
+
+        DateTimeOffset expiresAt = DateTimeOffset.FromUnixTimeMilliseconds(payload.Exp);
+        if (expiresAt <= now)
+        {
+            throw new InvalidOperationException("Offer code has expired; exchange a fresh code.");
+        }
+
+        return new SessionOffer(
+            Guid.Parse(payload.Sid),
+            FromBase64Url(payload.Pk),
+            expiresAt,
+            FromBase64Url(payload.Tok),
+            payload.Lan,
+            payload.Wan);
     }
 
     /// <summary>Derives a 6-digit PIN from the one-time token for out-of-band confirmation.</summary>

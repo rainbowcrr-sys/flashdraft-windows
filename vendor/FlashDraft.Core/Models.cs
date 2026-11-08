@@ -16,7 +16,11 @@ public sealed record FileDescriptor(
     string RelativePath,
     long Length,
     uint TotalChunks,
-    byte[] Sha256);
+    byte[] Sha256)
+{
+    /// <summary>Adjustable: LAN uses 256 KiB chunks; WAN UDP uses 32 KiB.</summary>
+    public int ChunkSize { get; init; } = ProtocolConstants.ChunkSize;
+}
 
 /// <summary>Immutable progress snapshot pushed to the UI layer.</summary>
 public sealed record ProgressSnapshot(
@@ -99,3 +103,17 @@ public sealed class ChunkBitmap
     public static ChunkBitmap FromBase64(uint totalChunks, string value) =>
         new(totalChunks, Convert.FromBase64String(value));
 }
+
+
+/// <summary>
+/// A short-lived, manually exchanged offer. It carries the offerer's ephemeral
+/// public key, LAN candidates, an optional STUN reflexive endpoint, and a
+/// one-time token. There is no signaling server and no automatic WAN discovery.
+/// </summary>
+public sealed record SessionOffer(
+    Guid SessionId,
+    byte[] OffererPublicKey,
+    DateTimeOffset ExpiresAt,
+    byte[] OneTimeToken,
+    IReadOnlyList<string> LanCandidates,
+    string? ReflexiveEndpoint);
