@@ -8,6 +8,15 @@ on:
   schedule:
     - cron: '23 2 * * *'
   workflow_dispatch:
+    inputs:
+      channel:
+        description: 'Release channel for manual runs'
+        required: false
+        default: 'edge'
+        type: choice
+        options:
+          - edge
+          - nightly
 
 permissions:
   contents: write
@@ -92,7 +101,7 @@ jobs:
             TITLE="FlashDraft ${TAG}"
             NOTES="Stable release ${TAG}. All packages are unsigned; verify SHA256SUMS before use."
             PRERELEASE=0
-          elif [[ "${GITHUB_EVENT_NAME}" == "schedule" ]]; then
+          elif [[ "${GITHUB_EVENT_NAME}" == "schedule" || "${{ inputs.channel }}" == "nightly" ]]; then
             TAG="nightly"
             TITLE="Nightly build $(date -u +%F)"
             NOTES="Automated nightly build. Unsigned and unverified; use at your own risk."
