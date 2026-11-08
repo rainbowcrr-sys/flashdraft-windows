@@ -1,70 +1,9 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="using:FlashDraft.App"
         x:Class="FlashDraft.App.MainWindow"
         Width="900" Height="640"
         MinWidth="720" MinHeight="480"
         Title="FlashDraft">
-    <Grid RowDefinitions="Auto,*" Margin="18">
-        <TextBlock Grid.Row="0"
-                   Text="FlashDraft"
-                   FontSize="22"
-                   FontWeight="SemiBold"
-                   Margin="0,0,0,14" />
-
-        <TabControl Grid.Row="1">
-            <TabItem Header="Transfer">
-                <ScrollViewer Margin="8">
-                    <StackPanel Spacing="8">
-                        <TextBlock Text="My offer code" />
-                        <TextBox Text="{Binding LocalCode}" IsReadOnly="True"
-                                 Watermark="Generate a code first" />
-
-                        <TextBlock Text="Peer offer code" />
-                        <TextBox Text="{Binding RemoteCode}"
-                                 Watermark="flashdraft://..." />
-
-                        <StackPanel Orientation="Horizontal" Spacing="10">
-                            <Button Content="Generate my code" Command="{Binding GenerateCodeCommand}" />
-                            <Button Content="Bind peer" Command="{Binding BindPeerCommand}" />
-                            <CheckBox Content="WAN mode" IsChecked="{Binding IsWanMode}"
-                                      VerticalAlignment="Center" />
-                        </StackPanel>
-
-                        <TextBlock Text="Source file" />
-                        <TextBox Text="{Binding SourcePath}"
-                                 Watermark="Full path of the file to send" />
-
-                        <TextBlock Text="Destination directory" />
-                        <TextBox Text="{Binding DestinationPath}"
-                                 Watermark="Leave empty for the default download folder" />
-
-                        <StackPanel Orientation="Horizontal" Spacing="10">
-                            <Button Content="Wait for transfer" Command="{Binding WaitForTransferCommand}" />
-                            <Button Content="Send file" Command="{Binding SendFileCommand}" />
-                            <Button Content="Loopback self test" Command="{Binding RunLoopbackTestCommand}" />
-                            <Button Content="Cancel" Command="{Binding CancelCommand}" />
-                        </StackPanel>
-
-                        <StackPanel Orientation="Horizontal" Spacing="18">
-                            <TextBlock Text="{Binding StatusText}" />
-                            <TextBlock Text="{Binding SpeedText}" />
-                        </StackPanel>
-
-                        <ProgressBar Minimum="0" Maximum="100"
-                                     Value="{Binding ProgressPercent}"
-                                     Height="14" />
-                        <ListBox Height="90" ItemsSource="{Binding Devices}" />
-                    </StackPanel>
-                </ScrollViewer>
-            </TabItem>
-
-            <TabItem Header="About">
-                <ScrollViewer Margin="8">
-                    <TextBlock Text="{Binding AboutText}"
-                               TextWrapping="Wrap"
-                               LineSpacing="4" />
-                </ScrollViewer>
-            </TabItem>
-        </TabControl>
-    </Grid>
+    <local:MainView />
 </Window>

@@ -3,6 +3,7 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
     <Nullable>enable</Nullable>
+    <ApplicationIcon>..\..\assets\flashdraft-icon.ico</ApplicationIcon>
     <ImplicitUsings>enable</ImplicitUsings>
     <ApplicationIcon />
   </PropertyGroup>

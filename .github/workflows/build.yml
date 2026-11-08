@@ -5,6 +5,12 @@ on:
     branches: [ main ]
     tags: [ 'v0.*' ]
   pull_request:
+  schedule:
+    - cron: '23 2 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -16,19 +22,82 @@ jobs:
           dotnet-version: '10.0.x'
       - name: Build
         run: dotnet build FlashDraft.Windows.sln -c Release
-      - name: Publish
+      - name: Publish self-contained payload
         run: dotnet publish src/FlashDraft.Desktop/FlashDraft.Desktop.csproj -c Release -r win-x64 --self-contained true -o ./publish
-      # Adjustable: add WiX msi packaging here when tooling is available. The
-      # payload stays unsigned at zero cost and is shipped with a SHA-256 sum.
-      - name: Package
+      - name: Build installable setup executable
         shell: pwsh
-        run: Compress-Archive -Path ./publish/* -DestinationPath ./FlashDraft-Windows-x64.zip
+        run: |
+          $iscc = Join-Path ${env:ProgramFiles(x86)} "Inno Setup 6\ISCC.exe"
+          if (-not (Test-Path $iscc)) { choco install innosetup -y --no-progress --limit-output }
+          if (Test-Path $iscc) {
+            & $iscc packaging\installer.iss
+          } else {
+            Write-Host "::warning::Inno Setup unavailable; only the portable zip is produced"
+          }
+      - name: Portable zip
+        shell: pwsh
+        run: Compress-Archive -Path ./publish/* -DestinationPath ./FlashDraft-Windows-x64-Portable.zip
       - name: Checksum
         shell: pwsh
-        run: (Get-FileHash ./FlashDraft-Windows-x64.zip -Algorithm SHA256).Hash | Out-File ./SHA256SUMS.txt
+        run: |
+          $files = @("./FlashDraft-Windows-x64-Setup.exe", "./packaging/FlashDraft-Windows-x64-Setup.exe", "./FlashDraft-Windows-x64-Portable.zip") | Where-Object { Test-Path $_ }
+          $lines = foreach ($f in $files) { $h = (Get-FileHash $f -Algorithm SHA256).Hash; "$h  $(Split-Path $f -Leaf)" }
+          $lines | Out-File -Encoding utf8 ./SHA256SUMS.txt
       - uses: actions/upload-artifact@v4
         with:
           name: flashdraft-windows
+          if-no-files-found: error
           path: |
-            ./FlashDraft-Windows-x64.zip
+            ./FlashDraft-Windows-x64-Setup.exe
+            ./packaging/FlashDraft-Windows-x64-Setup.exe
+            ./FlashDraft-Windows-x64-Portable.zip
             ./SHA256SUMS.txt
+  release:
+    if: github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: flashdraft-*
+          path: dist
+          merge-multiple: true
+      - name: Publish build artifacts to a GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mapfile -t FILES < <(find dist -type f -print)
+          if [ "${#FILES[@]}" -eq 0 ]; then
+            echo "::error::No build artifacts were downloaded"
+            exit 1
+          fi
+          if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
+            TAG="${GITHUB_REF_NAME}"
+            TITLE="FlashDraft ${TAG}"
+            NOTES="Stable release ${TAG}. All packages are unsigned; verify SHA256SUMS before use."
+            PRERELEASE=0
+          elif [[ "${GITHUB_EVENT_NAME}" == "schedule" ]]; then
+            TAG="nightly"
+            TITLE="Nightly build $(date -u +%F)"
+            NOTES="Automated nightly build. Unsigned and unverified; use at your own risk."
+            PRERELEASE=1
+          else
+            TAG="edge"
+            TITLE="Edge build"
+            NOTES="Rolling build from the main branch. Unsigned and unverified."
+            PRERELEASE=1
+          fi
+          ARGS=()
+          if [[ "$PRERELEASE" == "1" ]]; then ARGS+=(--prerelease); fi
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            # Remove stale assets so nightly/edge releases never accumulate old files.
+            gh release view "$TAG" --json assets --jq '.assets[].name' | while IFS= read -r name; do
+              gh release delete-asset "$TAG" "$name" --yes >/dev/null 2>&1 || true
+            done
+            gh release upload "$TAG" "${FILES[@]}" --clobber
+          else
+            gh release create "$TAG" "${ARGS[@]}" --title "$TITLE" --notes "$NOTES" "${FILES[@]}"
+          fi
+          echo "Published ${#FILES[@]} file(s) to release $TAG"

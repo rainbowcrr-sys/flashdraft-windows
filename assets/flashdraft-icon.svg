@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="FlashDraft icon">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2C7BFF"/>
+      <stop offset="1" stop-color="#0B47C9"/>
+    </linearGradient>
+    <linearGradient id="sheen" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.18"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect x="16" y="16" width="480" height="480" rx="112" fill="url(#bg)"/>
+  <rect x="16" y="16" width="480" height="248" rx="112" fill="url(#sheen)"/>
+  <!-- Two opposing arrows: send and receive -->
+  <g fill="none" stroke="#FFFFFF" stroke-width="30" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M140 196 H344"/>
+    <path d="M312 160 L356 196 L312 232"/>
+    <path d="M372 316 H168"/>
+    <path d="M200 280 L156 316 L200 352"/>
+  </g>
+  <!-- Lightning bolt: speed -->
+  <path d="M270 224 L228 276 H254 L240 308 L294 252 H266 Z" fill="#FFD84D"/>
+</svg>

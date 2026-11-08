@@ -10,11 +10,18 @@ public partial class App : global::Avalonia.Application
 
     public override void OnFrameworkInitializationCompleted()
     {
-        // On desktop platforms the classic lifetime owns the main window.
-        // On Android the activity host provides the view instead.
+        // Desktop uses a classic lifetime with a Window; Android and other
+        // single-view platforms need MainView to be assigned explicitly.
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             desktop.MainWindow = new MainWindow
+            {
+                DataContext = new MainViewModel(),
+            };
+        }
+        else if (ApplicationLifetime is ISingleViewApplicationLifetime singleView)
+        {
+            singleView.MainView = new MainView
             {
                 DataContext = new MainViewModel(),
             };
