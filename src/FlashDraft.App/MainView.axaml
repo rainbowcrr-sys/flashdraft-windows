@@ -30,12 +30,12 @@
                                           StrokeLineCap="Round" />
                                     <Path Data="M68 35 L77 42 L68 49" Stroke="White"
                                           StrokeThickness="7" StrokeLineCap="Round"
-                                          StrokeLineJoin="Round" />
+                                          StrokeJoin="Round" />
                                     <Path Data="M75 66 H33" Stroke="White" StrokeThickness="7"
                                           StrokeLineCap="Round" />
                                     <Path Data="M40 59 L31 66 L40 73" Stroke="White"
                                           StrokeThickness="7" StrokeLineCap="Round"
-                                          StrokeLineJoin="Round" />
+                                          StrokeJoin="Round" />
                                     <Path Data="M57 47 L47 59 H54 L50 70 L64 55 H56 Z"
                                           Fill="#FFD84D" />
                                 </Canvas>
