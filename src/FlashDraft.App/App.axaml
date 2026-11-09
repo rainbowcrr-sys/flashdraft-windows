@@ -10,17 +10,18 @@
         </Style>
         <Style Selector="TabItem">
             <Setter Property="FontSize" Value="14" />
-            <Setter Property="Padding" Value="20,12" />
+            <Setter Property="Padding" Value="22,13" />
         </Style>
         <Style Selector="TextBlock">
             <Setter Property="Foreground" Value="#1B2430" />
         </Style>
         <Style Selector="Button">
-            <Setter Property="Padding" Value="14,8" />
+            <Setter Property="Padding" Value="14,9" />
             <Setter Property="FontSize" Value="13" />
         </Style>
         <Style Selector="TextBox">
             <Setter Property="FontSize" Value="13" />
+            <Setter Property="Padding" Value="10,8" />
         </Style>
     </Application.Styles>
 </Application>
