@@ -1,66 +1,116 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="FlashDraft.App.MainView">
-    <Grid RowDefinitions="Auto,*" Margin="18">
-        <TextBlock Grid.Row="0"
-                   Text="FlashDraft"
-                   FontSize="22"
-                   FontWeight="SemiBold"
-                   Margin="0,0,0,14" />
+    <Grid RowDefinitions="Auto,*" Background="#F2F5FB">
 
-        <TabControl Grid.Row="1">
+        <!-- Brand bar -->
+        <Border Grid.Row="0" Height="68">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="#0B47C9" Offset="0" />
+                    <GradientStop Color="#3A82F0" Offset="1" />
+                </LinearGradientBrush>
+            </Border.Background>
+            <StackPanel Orientation="Horizontal" Margin="24,0" Spacing="14"
+                        VerticalAlignment="Center">
+                <Border Width="34" Height="34" CornerRadius="9"
+                        Background="#33FFFFFF" VerticalAlignment="Center">
+                    <TextBlock Text="FD" FontSize="14" FontWeight="Bold"
+                               Foreground="White"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center" />
+                </Border>
+                <StackPanel Spacing="1" VerticalAlignment="Center">
+                    <TextBlock Text="FlashDraft" FontSize="20" FontWeight="SemiBold"
+                               Foreground="White" />
+                    <TextBlock Text="LAN and Internet file transfer" FontSize="11"
+                               Foreground="#D6E6FF" />
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <!-- Left navigation and card-based content -->
+        <TabControl Grid.Row="1" TabStripPlacement="Left"
+                    Background="Transparent" Padding="0">
             <TabItem Header="Transfer">
-                <ScrollViewer Margin="8">
-                    <StackPanel Spacing="8">
-                        <TextBlock Text="My offer code" />
-                        <TextBox Text="{Binding LocalCode}" IsReadOnly="True"
-                                 Watermark="Generate a code first" />
+                <Border Margin="20" Padding="24" Background="White"
+                        CornerRadius="14" BoxShadow="0 6 22 0 #1E1B2430">
+                    <ScrollViewer>
+                        <StackPanel Spacing="12">
 
-                        <TextBlock Text="Peer offer code" />
-                        <TextBox Text="{Binding RemoteCode}"
-                                 Watermark="flashdraft://..." />
+                            <TextBlock Text="Pairing" FontSize="15"
+                                       FontWeight="SemiBold" Foreground="#0B47C9" />
+                            <Border Height="1" Background="#E6EBF4" Margin="0,0,0,4" />
 
-                        <StackPanel Orientation="Horizontal" Spacing="10">
-                            <Button Content="Generate my code" Command="{Binding GenerateCodeCommand}" />
-                            <Button Content="Bind peer" Command="{Binding BindPeerCommand}" />
-                            <CheckBox Content="WAN mode" IsChecked="{Binding IsWanMode}"
-                                      VerticalAlignment="Center" />
+                            <TextBlock Text="My offer code" FontSize="12" Foreground="#667085" />
+                            <TextBox Text="{Binding LocalCode}" IsReadOnly="True"
+                                     Watermark="Generate a code first" />
+
+                            <TextBlock Text="Peer offer code" FontSize="12" Foreground="#667085" />
+                            <TextBox Text="{Binding RemoteCode}"
+                                     Watermark="flashdraft://..." />
+
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <Button Content="Generate my code"
+                                        Command="{Binding GenerateCodeCommand}" />
+                                <Button Content="Bind peer"
+                                        Command="{Binding BindPeerCommand}" />
+                                <CheckBox Content="WAN mode"
+                                          IsChecked="{Binding IsWanMode}"
+                                          VerticalAlignment="Center" />
+                            </StackPanel>
+
+                            <TextBlock Text="Transfer" FontSize="15" FontWeight="SemiBold"
+                                       Foreground="#0B47C9" Margin="0,10,0,0" />
+                            <Border Height="1" Background="#E6EBF4" Margin="0,0,0,4" />
+
+                            <TextBlock Text="Source file" FontSize="12" Foreground="#667085" />
+                            <TextBox Text="{Binding SourcePath}"
+                                     Watermark="Full path of the file to send" />
+
+                            <TextBlock Text="Destination directory" FontSize="12"
+                                       Foreground="#667085" />
+                            <TextBox Text="{Binding DestinationPath}"
+                                     Watermark="Leave empty for the default download folder" />
+
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <Button Content="Wait for transfer"
+                                        Command="{Binding WaitForTransferCommand}" />
+                                <Button Content="Send file"
+                                        Command="{Binding SendFileCommand}" />
+                                <Button Content="Loopback self test"
+                                        Command="{Binding RunLoopbackTestCommand}" />
+                                <Button Content="Cancel"
+                                        Command="{Binding CancelCommand}" />
+                            </StackPanel>
+
+                            <TextBlock Text="Progress" FontSize="15" FontWeight="SemiBold"
+                                       Foreground="#0B47C9" Margin="0,10,0,0" />
+                            <Border Height="1" Background="#E6EBF4" Margin="0,0,0,4" />
+
+                            <StackPanel Orientation="Horizontal" Spacing="18">
+                                <TextBlock Text="{Binding StatusText}" Foreground="#667085" />
+                                <TextBlock Text="{Binding SpeedText}" Foreground="#667085" />
+                            </StackPanel>
+
+                            <ProgressBar Minimum="0" Maximum="100"
+                                         Value="{Binding ProgressPercent}"
+                                         Height="10" Foreground="#0B47C9" />
+                            <ListBox Height="86" ItemsSource="{Binding Devices}" />
+
                         </StackPanel>
-
-                        <TextBlock Text="Source file" />
-                        <TextBox Text="{Binding SourcePath}"
-                                 Watermark="Full path of the file to send" />
-
-                        <TextBlock Text="Destination directory" />
-                        <TextBox Text="{Binding DestinationPath}"
-                                 Watermark="Leave empty for the default download folder" />
-
-                        <StackPanel Orientation="Horizontal" Spacing="10">
-                            <Button Content="Wait for transfer" Command="{Binding WaitForTransferCommand}" />
-                            <Button Content="Send file" Command="{Binding SendFileCommand}" />
-                            <Button Content="Loopback self test" Command="{Binding RunLoopbackTestCommand}" />
-                            <Button Content="Cancel" Command="{Binding CancelCommand}" />
-                        </StackPanel>
-
-                        <StackPanel Orientation="Horizontal" Spacing="18">
-                            <TextBlock Text="{Binding StatusText}" />
-                            <TextBlock Text="{Binding SpeedText}" />
-                        </StackPanel>
-
-                        <ProgressBar Minimum="0" Maximum="100"
-                                     Value="{Binding ProgressPercent}"
-                                     Height="14" />
-                        <ListBox Height="90" ItemsSource="{Binding Devices}" />
-                    </StackPanel>
-                </ScrollViewer>
+                    </ScrollViewer>
+                </Border>
             </TabItem>
 
             <TabItem Header="About">
-                <ScrollViewer Margin="8">
-                    <TextBlock Text="{Binding AboutText}"
-                               TextWrapping="Wrap"
-                               LineSpacing="4" />
-                </ScrollViewer>
+                <Border Margin="20" Padding="24" Background="White"
+                        CornerRadius="14" BoxShadow="0 6 22 0 #1E1B2430">
+                    <ScrollViewer>
+                        <TextBlock Text="{Binding AboutText}" TextWrapping="Wrap"
+                                   FontSize="13" Foreground="#1B2430" />
+                    </ScrollViewer>
+                </Border>
             </TabItem>
         </TabControl>
     </Grid>
