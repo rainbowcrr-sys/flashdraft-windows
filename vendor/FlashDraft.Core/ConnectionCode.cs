@@ -23,6 +23,9 @@ public static class ConnectionCode
         [JsonPropertyName("exp")] public long Exp { get; set; }
         [JsonPropertyName("tok")] public string Tok { get; set; } = string.Empty;
         [JsonPropertyName("wan")] public string? Wan { get; set; }
+        [JsonPropertyName("fmt")] public int Fmt { get; set; }
+        [JsonPropertyName("eps")] public string[] Eps { get; set; } = Array.Empty<string>();
+        [JsonPropertyName("nat")] public string? Nat { get; set; }
     }
 
     public static string Encode(TransferSession session)
@@ -87,10 +90,36 @@ public static class ConnectionCode
             Wan = offer.ReflexiveEndpoint,
             Exp = offer.ExpiresAt.ToUnixTimeMilliseconds(),
             Tok = ToBase64Url(offer.OneTimeToken),
+            Wan = offer.ReflexiveEndpoint ?? FirstIpv4(offer.Endpoints),
+            Fmt = offer.Endpoints.Count > 0 ? ProtocolConstants.OfferFormatVersion2 : 0,
+            Eps = offer.Endpoints.ToArray(),
+            Nat = offer.NatTypeHint,
         };
 
         byte[] json = JsonSerializer.SerializeToUtf8Bytes(payload);
         return $"{ProtocolConstants.UriScheme}://{ToBase64Url(Compress(json))}";
+    }
+
+    private static string? FirstIpv4(IReadOnlyList<string> endpoints)
+    {
+        foreach (string candidate in endpoints)
+        {
+            if (string.IsNullOrWhiteSpace(candidate) ||
+                candidate.StartsWith("[", StringComparison.Ordinal))
+            {
+                continue;
+            }
+
+            int colon = candidate.LastIndexOf(':');
+            if (colon > 0 &&
+                System.Net.IPAddress.TryParse(candidate.Substring(0, colon), out var address) &&
+                address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+            {
+                return candidate;
+            }
+        }
+
+        return null;
     }
 
     /// <summary>Decodes an offer and rejects expired codes.</summary>
@@ -123,7 +152,11 @@ public static class ConnectionCode
             expiresAt,
             FromBase64Url(payload.Tok),
             payload.Lan,
-            payload.Wan);
+            payload.Wan)
+        {
+            Endpoints = payload.Eps ?? Array.Empty<string>(),
+            NatTypeHint = payload.Nat,
+        };
     }
 
     /// <summary>Derives a 6-digit PIN from the one-time token for out-of-band confirmation.</summary>

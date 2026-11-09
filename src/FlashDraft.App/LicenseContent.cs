@@ -7,7 +7,7 @@ namespace FlashDraft.App;
 public static class LicenseContent
 {
     public const string Text = """
-FlashDraft 0.1.1  |  License Agreement / 许可协议
+FlashDraft 0.1.2  |  License Agreement / 许可协议
 Copyright 2026 rainbowcrr-sys
 
 Before using FlashDraft, please read and accept the license.

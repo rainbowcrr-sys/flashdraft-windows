@@ -3,7 +3,7 @@
 ; Install > Finished (with optional "Launch FlashDraft").
 [Setup]
 AppName=FlashDraft
-AppVersion=0.1.1
+AppVersion=0.1.2
 AppPublisher=rainbowcrr-sys
 DefaultDirName={autopf}\FlashDraft
 DefaultGroupName=FlashDraft

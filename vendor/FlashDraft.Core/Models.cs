@@ -116,4 +116,14 @@ public sealed record SessionOffer(
     DateTimeOffset ExpiresAt,
     byte[] OneTimeToken,
     IReadOnlyList<string> LanCandidates,
-    string? ReflexiveEndpoint);
+    string? ReflexiveEndpoint)
+{
+    /// <summary>
+    /// v2: ordered dial candidates (IPv6 global, IPv4 reflexive, LAN).
+    /// Empty on v1 offers, which fall back to ReflexiveEndpoint + LanCandidates.
+    /// </summary>
+    public IReadOnlyList<string> Endpoints { get; init; } = Array.Empty<string>();
+
+    /// <summary>Local NAT classification, used only for bilingual failure hints.</summary>
+    public string? NatTypeHint { get; init; }
+}

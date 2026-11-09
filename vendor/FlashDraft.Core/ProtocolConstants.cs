@@ -62,6 +62,31 @@ public static class ProtocolConstants
     public const int UdpMaxRetries = 6;
     public const int ConnectionCodeTtlMinutes = 5;
     public const uint StunMagicCookie = 0x2112A442;
+
+    /// <summary>WAN hole punching: five STUN attempts with exponential backoff.</summary>
+    public const int StunMaxAttempts = 5;
+    public static readonly int[] StunBackoffMs = { 400, 800, 1600, 3200, 6400 };
+    public const int StunReceiveTimeoutMs = 1200;
+
+    /// <summary>Adjustable: public STUN servers, rotated between attempts.</summary>
+    public static readonly string[] StunServerEndpoints =
+    {
+        "stun.l.google.com:19302",
+        "stun.cloudflare.com:3478",
+        "stun.miwifi.com:3478",
+        "global.stun.twilio.com:3478",
+    };
+
+    /// <summary>Offer codes stay valid for five minutes; keep the NAT mapping warm.</summary>
+    public const int OfferKeepAliveSeconds = 20;
+
+    /// <summary>Dual-stack punch window and probe schedule.</summary>
+    public const int PunchWindowSeconds = 30;
+    public const int MaxProbeIntervalMs = 2000;
+    public const int MaxPunchPacketBytes = 1200;
+
+    /// <summary>Marks an offer payload that carries the v2 endpoint set.</summary>
+    public const int OfferFormatVersion2 = 2;
 }
 
 /// <summary>Frame types carried in the header.</summary>
