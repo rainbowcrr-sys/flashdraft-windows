@@ -28,6 +28,8 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty] private double _progressPercent;
     [ObservableProperty] private string _speedText = "0 B/s";
     [ObservableProperty] private string _statusText = "Idle";
+    [ObservableProperty] private bool _licensePending = !LicenseGate.IsAccepted();
+    [ObservableProperty] private bool _licenseAccepted;
 
     private readonly SessionOrchestrator _orchestrator = new();
     private readonly Channel<ProgressSnapshot> _progressChannel;
@@ -54,7 +56,18 @@ public partial class MainViewModel : ObservableObject
 
     public IProgress<ProgressSnapshot> Progress { get; }
 
-    public string AboutText => AboutNotice.Text;
+    /// <summary>The About page also re-displays the full license for review.</summary>
+    public string AboutText => AboutNotice.Text + "\n\n" + LicenseContent.Text;
+
+    public string LicenseText => LicenseContent.Text;
+
+    [RelayCommand]
+    private void AcceptLicense()
+    {
+        if (!LicenseAccepted) return;
+        LicenseGate.MarkAccepted();
+        LicensePending = false;
+    }
 
     [RelayCommand]
     private async Task GenerateCode()

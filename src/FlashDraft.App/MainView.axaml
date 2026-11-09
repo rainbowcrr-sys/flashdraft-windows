@@ -154,5 +154,40 @@
                 </Border>
             </TabItem>
         </TabControl>
+
+        <!-- First-run license gate. The main window still starts normally; the
+             overlay blocks interaction until the user accepts. -->
+        <Border Grid.RowSpan="2" IsVisible="{Binding LicensePending}"
+                Background="#990B1220">
+            <Border Margin="36" Padding="24" Background="White" CornerRadius="14"
+                    MaxWidth="760" MinWidth="520"
+                    HorizontalAlignment="Center" VerticalAlignment="Center"
+                    BoxShadow="0 10 40 0 #33000000">
+                <Grid RowDefinitions="Auto,*,Auto,Auto">
+                    <TextBlock Grid.Row="0" Text="License Agreement / 许可协议"
+                               FontSize="18" FontWeight="SemiBold" Foreground="#0B47C9"
+                               Margin="0,0,0,12" />
+                    <Border Grid.Row="1" Background="#F7F9FD" CornerRadius="8"
+                            BorderBrush="#E6EBF4" BorderThickness="1" Padding="12">
+                        <ScrollViewer Height="260">
+                            <TextBlock Text="{Binding LicenseText}" TextWrapping="Wrap"
+                                       FontSize="11" Foreground="#1B2430" />
+                        </ScrollViewer>
+                    </Border>
+                    <CheckBox Grid.Row="2"
+                              Content="我已阅读并接受 / I have read and accept the license"
+                              IsChecked="{Binding LicenseAccepted}" Margin="0,14,0,0" />
+                    <StackPanel Grid.Row="3" Orientation="Horizontal" Spacing="14"
+                                HorizontalAlignment="Right" Margin="0,12,0,0">
+                        <TextBlock Text="不接受请关闭窗口退出 / Decline by closing the window"
+                                   FontSize="11" Foreground="#667085"
+                                   VerticalAlignment="Center" />
+                        <Button Content="继续 / Continue" Background="#0B47C9"
+                                Foreground="White" IsEnabled="{Binding LicenseAccepted}"
+                                Command="{Binding AcceptLicenseCommand}" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Border>
     </Grid>
 </UserControl>

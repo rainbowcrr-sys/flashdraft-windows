@@ -1,0 +1,14 @@
+FlashDraft - NOTICE
+Copyright 2026 rainbowcrr-sys
+
+PCL ACKNOWLEDGEMENT / PCL 署名声明
+
+FlashDraft's user interface design is inspired by Plain Craft Launcher (PCL) by 龙腾猫跃 (Meloong). The author has explicitly granted permission for this use. This project contains no PCL source code, XAML, images, logos, or fonts. FlashDraft is an independent file-transfer tool and is not affiliated with, endorsed by, or officially related to PCL or its author. PCL and all related rights remain with the original author. See https://github.com/Meloong-Git/PCL/blob/main/LICENCE.
+
+界面观感参考 PCL（作者 龙腾猫跃 / Meloong），已获作者明确许可；本作品与 PCL 无官方关联，非官方作品。本项目不包含 PCL 的源代码、XAML、图片、Logo 或字体；PCL 及相关权利归原作者所有。参见 https://github.com/Meloong-Git/PCL/blob/main/LICENCE。
+
+LICENSE GRANT / 许可授予
+
+FlashDraft's own code is licensed under the Apache License, Version 2.0 (Apache-2.0), by rainbowcrr-sys. The full text is included in LICENSE and is also available at https://www.apache.org/licenses/LICENSE-2.0. The canonical LICENSE and NOTICE files live in the flashdraft-core repository; the other platform repositories carry identical copies generated from that source.
+
+FlashDraft 自身代码由 rainbowcrr-sys 以 Apache License 2.0 授权。全文见 LICENSE 文件。权威文本存放于 flashdraft-core 仓库，各平台仓库中的副本由该文本生成，内容一致。

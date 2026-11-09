@@ -22,36 +22,64 @@ permissions:
   contents: write
 
 jobs:
+  precheck:
+    runs-on: ubuntu-latest
+    outputs:
+      skip: ${{ steps.check.outputs.skip }}
+    steps:
+      - id: check
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          # Only the scheduled nightly is skipped. Every other event builds.
+          if [[ "${{ github.event_name }}" != "schedule" ]]; then
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          SHA="${{ github.sha }}"
+          BODY="$(gh release view nightly --json body --jq '.body' 2>/dev/null || true)"
+          if [[ "$BODY" == *"Build-SHA: $SHA"* ]]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "::notice::Nightly already built for $SHA; skipping."
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
   build:
+    needs: precheck
+    if: needs.precheck.outputs.skip != 'true'
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '10.0.x'
+      - name: Fetch canonical license
+        shell: pwsh
+        run: |
+          try {
+            Invoke-WebRequest -Uri "https://raw.githubusercontent.com/rainbowcrr-sys/flashdraft-core/main/LICENSE" -OutFile "packaging/LICENSE.txt" -UseBasicParsing -ErrorAction Stop
+          } catch {
+            Copy-Item LICENSE packaging/LICENSE.txt -Force
+          }
       - name: Build
         run: dotnet build FlashDraft.Windows.sln -c Release
       - name: Publish self-contained payload
         run: dotnet publish src/FlashDraft.Desktop/FlashDraft.Desktop.csproj -c Release -r win-x64 --self-contained true -o ./publish
-      - name: Build installable setup executable
+      - name: Include license in the payload
+        shell: pwsh
+        run: Copy-Item packaging/LICENSE.txt publish/LICENSE.txt -Force
+      - name: Build installable setup executable with a license page
         shell: pwsh
         run: |
           $iscc = Join-Path ${env:ProgramFiles(x86)} "Inno Setup 6\ISCC.exe"
           if (-not (Test-Path $iscc)) { choco install innosetup -y --no-progress --limit-output }
-          if (Test-Path $iscc) {
-            & $iscc packaging\installer.iss > iscc.log 2>&1
-            $code = $LASTEXITCODE
-            Get-Content iscc.log | Select-Object -Last 30
-            if ($code -ne 0) {
-              Select-String -Path iscc.log -Pattern "Error|error|not found|Line |Unknown|Unable|failed|Warning" |
-                Select-Object -Last 10 | ForEach-Object { Write-Host "::error::ISCC: $($_.Line)" }
-              Write-Host "::warning::Inno Setup compiler returned $code"
-            }
-          } else {
-            Write-Host "::warning::Inno Setup unavailable; only the portable zip is produced"
-          }
-          # A compiler failure must not block the portable package and the release.
-          exit 0
+          if (-not (Test-Path $iscc)) { Write-Error "Inno Setup 6 is unavailable"; exit 1 }
+          & $iscc packaging\installer.iss
+          if ($LASTEXITCODE -ne 0) { Write-Error "ISCC failed with $LASTEXITCODE"; exit $LASTEXITCODE }
+          if (-not (Test-Path ./FlashDraft-Windows-x64-Setup.exe)) { Write-Error "Setup.exe missing"; exit 1 }
       - name: Portable zip
         shell: pwsh
         run: Compress-Archive -Path ./publish/* -DestinationPath ./FlashDraft-Windows-x64-Portable.zip
@@ -112,6 +140,7 @@ jobs:
             NOTES="Rolling build from the main branch. Unsigned and unverified."
             PRERELEASE=1
           fi
+          NOTES="${NOTES} | Build-SHA: ${GITHUB_SHA}"
           ARGS=()
           if [[ "$PRERELEASE" == "1" ]]; then ARGS+=(--prerelease); fi
           if gh release view "$TAG" >/dev/null 2>&1; then
@@ -120,6 +149,7 @@ jobs:
               gh release delete-asset "$TAG" "$name" --yes >/dev/null 2>&1 || true
             done
             gh release upload "$TAG" "${FILES[@]}" --clobber
+            gh release edit "$TAG" --notes "$NOTES" || true
           else
             gh release create "$TAG" "${ARGS[@]}" --title "$TITLE" --notes "$NOTES" "${FILES[@]}"
           fi
