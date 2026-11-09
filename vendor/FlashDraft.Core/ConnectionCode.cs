@@ -90,7 +90,6 @@ public static class ConnectionCode
             Wan = offer.ReflexiveEndpoint,
             Exp = offer.ExpiresAt.ToUnixTimeMilliseconds(),
             Tok = ToBase64Url(offer.OneTimeToken),
-            Wan = offer.ReflexiveEndpoint ?? FirstIpv4(offer.Endpoints),
             Fmt = offer.Endpoints.Count > 0 ? ProtocolConstants.OfferFormatVersion2 : 0,
             Eps = offer.Endpoints.ToArray(),
             Nat = offer.NatTypeHint,
@@ -98,28 +97,6 @@ public static class ConnectionCode
 
         byte[] json = JsonSerializer.SerializeToUtf8Bytes(payload);
         return $"{ProtocolConstants.UriScheme}://{ToBase64Url(Compress(json))}";
-    }
-
-    private static string? FirstIpv4(IReadOnlyList<string> endpoints)
-    {
-        foreach (string candidate in endpoints)
-        {
-            if (string.IsNullOrWhiteSpace(candidate) ||
-                candidate.StartsWith("[", StringComparison.Ordinal))
-            {
-                continue;
-            }
-
-            int colon = candidate.LastIndexOf(':');
-            if (colon > 0 &&
-                System.Net.IPAddress.TryParse(candidate.Substring(0, colon), out var address) &&
-                address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
-            {
-                return candidate;
-            }
-        }
-
-        return null;
     }
 
     /// <summary>Decodes an offer and rejects expired codes.</summary>
