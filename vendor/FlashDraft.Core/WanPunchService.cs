@@ -90,19 +90,20 @@ public sealed class WanPunchService
                     IPEndPoint peer = inbound.Result.RemoteEndPoint;
                     if (message.Value.Kind == "PROBE")
                     {
+                        // Receiving an authenticated probe already proves the
+                        // mapping is open in both directions; answer it and
+                        // complete. Waiting for an ACK introduces a race when
+                        // the peer finishes in the same probe round.
                         try
                         {
                             await inbound.Socket.SendAsync(ack, ack.Length, peer).ConfigureAwait(false);
                         }
                         catch (SocketException)
                         {
-                            // The peer may have vanished; keep probing.
+                            // Best effort; our own channel is already usable.
                         }
 
                         learned = peer;
-                    }
-                    else
-                    {
                         return Finish(
                             true,
                             new PunchedEndpoint(inbound.Socket, peer),
@@ -114,6 +115,17 @@ public sealed class WanPunchService
                             pump4,
                             pump6);
                     }
+
+                    return Finish(
+                        true,
+                        new PunchedEndpoint(inbound.Socket, peer),
+                        null,
+                        options,
+                        v4,
+                        v6,
+                        pumpCts,
+                        pump4,
+                        pump6);
                 }
                 catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
                 {
@@ -203,26 +215,35 @@ public sealed class WanPunchService
         ChannelWriter<Inbound> writer,
         CancellationToken cancellationToken)
     {
-        try
+        while (!cancellationToken.IsCancellationRequested)
         {
-            while (!cancellationToken.IsCancellationRequested)
+            try
             {
                 UdpReceiveResult result = await socket.ReceiveAsync(cancellationToken)
                     .ConfigureAwait(false);
                 writer.TryWrite(new Inbound(result, socket));
             }
-        }
-        catch (OperationCanceledException)
-        {
-            // Normal shutdown.
-        }
-        catch (ObjectDisposedException)
-        {
-            // Socket closed by the owner.
-        }
-        catch (SocketException)
-        {
-            // Unrecoverable socket error; the main loop will time out.
+            catch (OperationCanceledException)
+            {
+                break;
+            }
+            catch (ObjectDisposedException)
+            {
+                break;
+            }
+            catch (SocketException)
+            {
+                // ICMP "port unreachable" from a peer that has not bound yet
+                // can surface here. The socket is still usable, so retry.
+                try
+                {
+                    await Task.Delay(10, cancellationToken).ConfigureAwait(false);
+                }
+                catch (OperationCanceledException)
+                {
+                    break;
+                }
+            }
         }
     }
 
