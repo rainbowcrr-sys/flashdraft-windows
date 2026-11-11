@@ -10,6 +10,7 @@ public partial class App : global::Avalonia.Application
 
     public override void OnFrameworkInitializationCompleted()
     {
+        Loc.Init();
         // Desktop uses a classic lifetime with a Window; Android and other
         // single-view platforms need MainView to be assigned explicitly.
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)

@@ -47,9 +47,9 @@
                         </Viewbox>
                     </Border>
                     <StackPanel Spacing="1" VerticalAlignment="Center">
-                        <TextBlock Text="FlashDraft" FontSize="20" FontWeight="SemiBold"
+                        <TextBlock Text="{DynamicResource Str.AppTitle}" FontSize="20" FontWeight="SemiBold"
                                    Foreground="White" />
-                        <TextBlock Text="LAN and Internet file transfer" FontSize="11"
+                        <TextBlock Text="{DynamicResource Str.Subtitle}" FontSize="11"
                                    Foreground="#D6E6FF" />
                     </StackPanel>
                 </StackPanel>
@@ -58,7 +58,7 @@
                     <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
                         <Border Width="8" Height="8" CornerRadius="4" Background="#6EE7A8"
                                 VerticalAlignment="Center" />
-                        <TextBlock Text="Ready" FontSize="12" Foreground="White" />
+                        <TextBlock Text="{DynamicResource Str.Ready}" FontSize="12" Foreground="White" />
                     </StackPanel>
                 </Border>
             </Grid>
@@ -66,7 +66,7 @@
 
             <TabControl Grid.Row="1" TabStripPlacement="Left"
                         Background="Transparent" Padding="0">
-                <TabItem Header="Transfer">
+                <TabItem Header="{DynamicResource Str.TabTransfer}">
                     <Border Margin="20" Padding="26" Background="White"
                             CornerRadius="14" BoxShadow="0 6 22 0 #1E1B2430">
                         <ScrollViewer>
@@ -75,25 +75,25 @@
                             <StackPanel Orientation="Horizontal" Spacing="9" Margin="0,4,0,2">
                                 <Border Width="3" Height="15" CornerRadius="2"
                                         Background="#0B47C9" VerticalAlignment="Center" />
-                                <TextBlock Text="Pairing" FontSize="15" FontWeight="SemiBold"
+                                <TextBlock Text="{DynamicResource Str.Pairing}" FontSize="15" FontWeight="SemiBold"
                                            Foreground="#0B47C9" VerticalAlignment="Center" />
                             </StackPanel>
                             <Border Height="1" Background="#E6EBF4" Margin="0,0,0,6" />
-                                <TextBlock Text="My offer code" FontSize="12" Foreground="#667085" />
+                                <TextBlock Text="{DynamicResource Str.MyOfferCode}" FontSize="12" Foreground="#667085" />
                                 <TextBox Text="{Binding LocalCode}" IsReadOnly="True"
-                                         Watermark="Generate a code first" />
+                                         Watermark="{DynamicResource Str.WatermarkGenerate}" />
 
-                                <TextBlock Text="Peer offer code" FontSize="12" Foreground="#667085" />
+                                <TextBlock Text="{DynamicResource Str.PeerOfferCode}" FontSize="12" Foreground="#667085" />
                                 <TextBox Text="{Binding RemoteCode}"
                                          Watermark="flashdraft://..." />
 
                                 <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,3,0,0">
-                                    <Button Content="Generate my code" Background="#0B47C9"
+                                    <Button Content="{DynamicResource Str.GenerateCode}" Background="#0B47C9"
                                             Foreground="White"
                                             Command="{Binding GenerateCodeCommand}" />
-                                    <Button Content="Bind peer"
+                                    <Button Content="{DynamicResource Str.BindPeer}"
                                             Command="{Binding BindPeerCommand}" />
-                                    <CheckBox Content="WAN mode"
+                                    <CheckBox Content="{DynamicResource Str.WanMode}"
                                               IsChecked="{Binding IsWanMode}"
                                               VerticalAlignment="Center" />
                                 </StackPanel>
@@ -101,35 +101,35 @@
                             <StackPanel Orientation="Horizontal" Spacing="9" Margin="0,4,0,2">
                                 <Border Width="3" Height="15" CornerRadius="2"
                                         Background="#0B47C9" VerticalAlignment="Center" />
-                                <TextBlock Text="Transfer" FontSize="15" FontWeight="SemiBold"
+                                <TextBlock Text="{DynamicResource Str.TabTransfer}" FontSize="15" FontWeight="SemiBold"
                                            Foreground="#0B47C9" VerticalAlignment="Center" />
                             </StackPanel>
                             <Border Height="1" Background="#E6EBF4" Margin="0,0,0,6" />
-                                <TextBlock Text="Source file" FontSize="12" Foreground="#667085" />
+                                <TextBlock Text="{DynamicResource Str.SourceFile}" FontSize="12" Foreground="#667085" />
                                 <TextBox Text="{Binding SourcePath}"
-                                         Watermark="Full path of the file to send" />
+                                         Watermark="{DynamicResource Str.WatermarkSource}" />
 
-                                <TextBlock Text="Destination directory" FontSize="12"
+                                <TextBlock Text="{DynamicResource Str.DestDir}" FontSize="12"
                                            Foreground="#667085" />
                                 <TextBox Text="{Binding DestinationPath}"
-                                         Watermark="Leave empty for the default download folder" />
+                                         Watermark="{DynamicResource Str.WatermarkDest}" />
 
                                 <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,3,0,0">
-                                    <Button Content="Wait for transfer"
+                                    <Button Content="{DynamicResource Str.WaitTransfer}"
                                             Command="{Binding WaitForTransferCommand}" />
-                                    <Button Content="Send file" Background="#0B47C9"
+                                    <Button Content="{DynamicResource Str.SendFile}" Background="#0B47C9"
                                             Foreground="White"
                                             Command="{Binding SendFileCommand}" />
-                                    <Button Content="Loopback self test"
+                                    <Button Content="{DynamicResource Str.Loopback}"
                                             Command="{Binding RunLoopbackTestCommand}" />
-                                    <Button Content="Cancel" Foreground="#B42318"
+                                    <Button Content="{DynamicResource Str.Cancel}" Foreground="#B42318"
                                             Command="{Binding CancelCommand}" />
                                 </StackPanel>
 
                             <StackPanel Orientation="Horizontal" Spacing="9" Margin="0,4,0,2">
                                 <Border Width="3" Height="15" CornerRadius="2"
                                         Background="#0B47C9" VerticalAlignment="Center" />
-                                <TextBlock Text="Progress" FontSize="15" FontWeight="SemiBold"
+                                <TextBlock Text="{DynamicResource Str.Progress}" FontSize="15" FontWeight="SemiBold"
                                            Foreground="#0B47C9" VerticalAlignment="Center" />
                             </StackPanel>
                             <Border Height="1" Background="#E6EBF4" Margin="0,0,0,6" />
@@ -148,7 +148,7 @@
                     </Border>
                 </TabItem>
 
-                <TabItem Header="About">
+                <TabItem Header="{DynamicResource Str.TabAbout}">
                     <Border Margin="20" Padding="26" Background="White"
                             CornerRadius="14" BoxShadow="0 6 22 0 #1E1B2430">
                         <ScrollViewer>
@@ -157,7 +157,7 @@
                             <StackPanel Orientation="Horizontal" Spacing="9" Margin="0,4,0,2">
                                 <Border Width="3" Height="15" CornerRadius="2"
                                         Background="#0B47C9" VerticalAlignment="Center" />
-                                <TextBlock Text="About / 关于" FontSize="15" FontWeight="SemiBold"
+                                <TextBlock Text="{DynamicResource Str.AboutTitle}" FontSize="15" FontWeight="SemiBold"
                                            Foreground="#0B47C9" VerticalAlignment="Center" />
                             </StackPanel>
                             <Border Height="1" Background="#E6EBF4" Margin="0,0,0,6" />
@@ -167,7 +167,7 @@
                             <StackPanel Orientation="Horizontal" Spacing="9" Margin="0,4,0,2">
                                 <Border Width="3" Height="15" CornerRadius="2"
                                         Background="#0B47C9" VerticalAlignment="Center" />
-                                <TextBlock Text="License / 许可全文" FontSize="15" FontWeight="SemiBold"
+                                <TextBlock Text="{DynamicResource Str.LicenseTitle}" FontSize="15" FontWeight="SemiBold"
                                            Foreground="#0B47C9" VerticalAlignment="Center" />
                             </StackPanel>
                             <Border Height="1" Background="#E6EBF4" Margin="0,0,0,6" />
@@ -185,6 +185,36 @@
                     </Border>
                 </TabItem>
 
+                <TabItem Header="{DynamicResource Str.TabSettings}">
+                    <Border Margin="20" Padding="26" Background="White"
+                            CornerRadius="14" BoxShadow="0 6 22 0 #1E1B2430">
+                        <StackPanel Spacing="14">
+                            <TextBlock Text="{DynamicResource Str.SettingsTitle}" FontSize="20"
+                                       FontWeight="SemiBold" Foreground="#0B47C9" />
+                            <Border Height="1" Background="#E6EBF4" />
+                            <TextBlock Text="{DynamicResource Str.LanguageLabel}" FontSize="15"
+                                       FontWeight="SemiBold" />
+                            <TextBlock Text="{DynamicResource Str.LanguageHint}" FontSize="12"
+                                       Foreground="#667085" TextWrapping="Wrap" />
+                            <TextBlock Text="{DynamicResource Str.DefaultFromInstall}" FontSize="12"
+                                       Foreground="#667085" TextWrapping="Wrap" />
+                            <StackPanel Spacing="10" Margin="0,6,0,0">
+                                <RadioButton Content="{DynamicResource Str.LangChinese}"
+                                             GroupName="Language" FontSize="14"
+                                             IsChecked="{Binding IsChinese}"
+                                             Command="{Binding SetLanguageCommand}"
+                                             CommandParameter="zh-CN" />
+                                <RadioButton Content="{DynamicResource Str.LangEnglish}"
+                                             GroupName="Language" FontSize="14"
+                                             IsChecked="{Binding IsEnglish}"
+                                             Command="{Binding SetLanguageCommand}"
+                                             CommandParameter="en-US" />
+                            </StackPanel>
+                            <TextBlock Text="{DynamicResource Str.Saved}" FontSize="12"
+                                       Foreground="#2FBF71" />
+                        </StackPanel>
+                    </Border>
+                </TabItem>
             </TabControl>
         </Grid>
 
@@ -231,9 +261,9 @@
                         </Viewbox>
                     </Border>
                     <StackPanel Spacing="1" VerticalAlignment="Center">
-                        <TextBlock Text="FlashDraft" FontSize="20" FontWeight="SemiBold"
+                        <TextBlock Text="{DynamicResource Str.AppTitle}" FontSize="20" FontWeight="SemiBold"
                                    Foreground="White" />
-                        <TextBlock Text="LAN and Internet file transfer" FontSize="11"
+                        <TextBlock Text="{DynamicResource Str.Subtitle}" FontSize="11"
                                    Foreground="#D6E6FF" />
                     </StackPanel>
                 </StackPanel>
@@ -242,7 +272,7 @@
                     <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
                         <Border Width="8" Height="8" CornerRadius="4" Background="#6EE7A8"
                                 VerticalAlignment="Center" />
-                        <TextBlock Text="Ready" FontSize="12" Foreground="White" />
+                        <TextBlock Text="{DynamicResource Str.Ready}" FontSize="12" Foreground="White" />
                     </StackPanel>
                 </Border>
             </Grid>
@@ -253,7 +283,7 @@
                     MaxWidth="860" HorizontalAlignment="Center"
                     VerticalAlignment="Center">
                 <Grid RowDefinitions="Auto,*,Auto,Auto" MinHeight="420">
-                    <TextBlock Grid.Row="0" Text="License Agreement / 许可协议"
+                    <TextBlock Grid.Row="0" Text="{DynamicResource Str.LicenseAgreement}"
                                FontSize="18" FontWeight="SemiBold" Foreground="#0B47C9"
                                Margin="0,0,0,12" />
                     <Border Grid.Row="1" Background="#F7F9FD" CornerRadius="8"
@@ -264,14 +294,14 @@
                         </ScrollViewer>
                     </Border>
                     <CheckBox Grid.Row="2"
-                              Content="我已阅读并接受 / I have read and accept the license"
+                              Content="{DynamicResource Str.AcceptLicense}"
                               IsChecked="{Binding LicenseAccepted}" Margin="0,14,0,0" />
                     <StackPanel Grid.Row="3" Orientation="Horizontal" Spacing="14"
                                 HorizontalAlignment="Right" Margin="0,12,0,0">
-                        <TextBlock Text="不接受请关闭窗口退出 / Decline by closing the window"
+                        <TextBlock Text="{DynamicResource Str.DeclineHint}"
                                    FontSize="11" Foreground="#667085"
                                    VerticalAlignment="Center" />
-                        <Button Content="继续 / Continue" Background="#0B47C9"
+                        <Button Content="{DynamicResource Str.Continue}" Background="#0B47C9"
                                 Foreground="White" IsEnabled="{Binding LicenseAccepted}"
                                 Command="{Binding AcceptLicenseCommand}" />
                     </StackPanel>

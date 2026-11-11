@@ -42,6 +42,7 @@ public partial class MainViewModel : ObservableObject
 
     public MainViewModel()
     {
+        Loc.LanguageChanged += () => { OnPropertyChanged(nameof(AboutText)); OnPropertyChanged(nameof(IsChinese)); OnPropertyChanged(nameof(IsEnglish)); };
         _progressChannel = Channel.CreateBounded<ProgressSnapshot>(
             new BoundedChannelOptions(256)
             {
@@ -58,6 +59,20 @@ public partial class MainViewModel : ObservableObject
     public IProgress<ProgressSnapshot> Progress { get; }
 
     /// <summary>Standalone About page: short notice plus the full license.</summary>
+
+    public bool IsChinese => Loc.IsChinese;
+    public bool IsEnglish => !Loc.IsChinese;
+
+    [RelayCommand]
+    private void SetLanguage(string lang)
+    {
+        Loc.Set(lang);
+        OnPropertyChanged(nameof(AboutText));
+        OnPropertyChanged(nameof(LicenseText));
+        OnPropertyChanged(nameof(IsChinese));
+        OnPropertyChanged(nameof(IsEnglish));
+    }
+
     public string AboutText => LicenseContent.Notice;
 
     public string LicenseText => LicenseContent.Text;
