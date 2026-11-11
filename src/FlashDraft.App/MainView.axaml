@@ -1,9 +1,14 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="FlashDraft.App.MainView">
-    <Grid RowDefinitions="Auto,*" Background="#F2F5FB">
+    <!-- Three real pages: Transfer, About (a tab in the main shell) and the
+         first-run License page. The license page is a sibling of the shell,
+         so nothing is ever stacked on top of the main interface. -->
+    <Grid Background="#F2F5FB">
 
-        <!-- Brand bar -->
+        <!-- Main shell: brand bar + side navigation + cards. -->
+        <Grid IsVisible="{Binding MainVisible}" RowDefinitions="Auto,*">
+        <!-- Brand bar, shared by every standalone page. -->
         <Border Grid.Row="0" Height="72">
             <Border.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
@@ -14,33 +19,33 @@
             <Grid ColumnDefinitions="*,Auto" Margin="24,0">
                 <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="14"
                             VerticalAlignment="Center">
-                        <Border Width="38" Height="38" CornerRadius="10"
-                                Background="White" VerticalAlignment="Center">
-                            <Viewbox Margin="2">
-                                <Canvas Width="108" Height="108">
-                                    <Rectangle Width="108" Height="108" RadiusX="24" RadiusY="24">
-                                        <Rectangle.Fill>
-                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                                <GradientStop Color="#0B47C9" Offset="0" />
-                                                <GradientStop Color="#3A82F0" Offset="1" />
-                                            </LinearGradientBrush>
-                                        </Rectangle.Fill>
-                                    </Rectangle>
-                                    <Path Data="M33 42 H75" Stroke="White" StrokeThickness="7"
-                                          StrokeLineCap="Round" />
-                                    <Path Data="M68 35 L77 42 L68 49" Stroke="White"
-                                          StrokeThickness="7" StrokeLineCap="Round"
-                                          StrokeJoin="Round" />
-                                    <Path Data="M75 66 H33" Stroke="White" StrokeThickness="7"
-                                          StrokeLineCap="Round" />
-                                    <Path Data="M40 59 L31 66 L40 73" Stroke="White"
-                                          StrokeThickness="7" StrokeLineCap="Round"
-                                          StrokeJoin="Round" />
-                                    <Path Data="M57 47 L47 59 H54 L50 70 L64 55 H56 Z"
-                                          Fill="#FFD84D" />
-                                </Canvas>
-                            </Viewbox>
-                        </Border>
+                    <Border Width="38" Height="38" CornerRadius="10"
+                            Background="White" VerticalAlignment="Center">
+                        <Viewbox Margin="2">
+                            <Canvas Width="108" Height="108">
+                                <Rectangle Width="108" Height="108" RadiusX="24" RadiusY="24">
+                                    <Rectangle.Fill>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                            <GradientStop Color="#0B47C9" Offset="0" />
+                                            <GradientStop Color="#3A82F0" Offset="1" />
+                                        </LinearGradientBrush>
+                                    </Rectangle.Fill>
+                                </Rectangle>
+                                <Path Data="M33 42 H75" Stroke="White" StrokeThickness="7"
+                                      StrokeLineCap="Round" />
+                                <Path Data="M68 35 L77 42 L68 49" Stroke="White"
+                                      StrokeThickness="7" StrokeLineCap="Round"
+                                      StrokeJoin="Round" />
+                                <Path Data="M75 66 H33" Stroke="White" StrokeThickness="7"
+                                      StrokeLineCap="Round" />
+                                <Path Data="M40 59 L31 66 L40 73" Stroke="White"
+                                      StrokeThickness="7" StrokeLineCap="Round"
+                                      StrokeJoin="Round" />
+                                <Path Data="M57 47 L47 59 H54 L50 70 L64 55 H56 Z"
+                                      Fill="#FFD84D" />
+                            </Canvas>
+                        </Viewbox>
+                    </Border>
                     <StackPanel Spacing="1" VerticalAlignment="Center">
                         <TextBlock Text="FlashDraft" FontSize="20" FontWeight="SemiBold"
                                    Foreground="White" />
@@ -59,14 +64,13 @@
             </Grid>
         </Border>
 
-        <!-- Desktop layout: vertical navigation on the left, wide card on the right -->
-        <TabControl Grid.Row="1" TabStripPlacement="Left"
-                    Background="Transparent" Padding="0">
-            <TabItem Header="Transfer">
-                <Border Margin="20" Padding="26" Background="White"
-                        CornerRadius="14" BoxShadow="0 6 22 0 #1E1B2430">
-                    <ScrollViewer>
-                        <StackPanel Spacing="11">
+            <TabControl Grid.Row="1" TabStripPlacement="Left"
+                        Background="Transparent" Padding="0">
+                <TabItem Header="Transfer">
+                    <Border Margin="20" Padding="26" Background="White"
+                            CornerRadius="14" BoxShadow="0 6 22 0 #1E1B2430">
+                        <ScrollViewer>
+                            <StackPanel Spacing="11">
 
                             <StackPanel Orientation="Horizontal" Spacing="9" Margin="0,4,0,2">
                                 <Border Width="3" Height="15" CornerRadius="2"
@@ -75,24 +79,24 @@
                                            Foreground="#0B47C9" VerticalAlignment="Center" />
                             </StackPanel>
                             <Border Height="1" Background="#E6EBF4" Margin="0,0,0,6" />
-                            <TextBlock Text="My offer code" FontSize="12" Foreground="#667085" />
-                            <TextBox Text="{Binding LocalCode}" IsReadOnly="True"
-                                     Watermark="Generate a code first" />
+                                <TextBlock Text="My offer code" FontSize="12" Foreground="#667085" />
+                                <TextBox Text="{Binding LocalCode}" IsReadOnly="True"
+                                         Watermark="Generate a code first" />
 
-                            <TextBlock Text="Peer offer code" FontSize="12" Foreground="#667085" />
-                            <TextBox Text="{Binding RemoteCode}"
-                                     Watermark="flashdraft://..." />
+                                <TextBlock Text="Peer offer code" FontSize="12" Foreground="#667085" />
+                                <TextBox Text="{Binding RemoteCode}"
+                                         Watermark="flashdraft://..." />
 
-                            <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,3,0,0">
-                                <Button Content="Generate my code" Background="#0B47C9"
-                                        Foreground="White"
-                                        Command="{Binding GenerateCodeCommand}" />
-                                <Button Content="Bind peer"
-                                        Command="{Binding BindPeerCommand}" />
-                                <CheckBox Content="WAN mode"
-                                          IsChecked="{Binding IsWanMode}"
-                                          VerticalAlignment="Center" />
-                            </StackPanel>
+                                <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,3,0,0">
+                                    <Button Content="Generate my code" Background="#0B47C9"
+                                            Foreground="White"
+                                            Command="{Binding GenerateCodeCommand}" />
+                                    <Button Content="Bind peer"
+                                            Command="{Binding BindPeerCommand}" />
+                                    <CheckBox Content="WAN mode"
+                                              IsChecked="{Binding IsWanMode}"
+                                              VerticalAlignment="Center" />
+                                </StackPanel>
 
                             <StackPanel Orientation="Horizontal" Spacing="9" Margin="0,4,0,2">
                                 <Border Width="3" Height="15" CornerRadius="2"
@@ -101,26 +105,26 @@
                                            Foreground="#0B47C9" VerticalAlignment="Center" />
                             </StackPanel>
                             <Border Height="1" Background="#E6EBF4" Margin="0,0,0,6" />
-                            <TextBlock Text="Source file" FontSize="12" Foreground="#667085" />
-                            <TextBox Text="{Binding SourcePath}"
-                                     Watermark="Full path of the file to send" />
+                                <TextBlock Text="Source file" FontSize="12" Foreground="#667085" />
+                                <TextBox Text="{Binding SourcePath}"
+                                         Watermark="Full path of the file to send" />
 
-                            <TextBlock Text="Destination directory" FontSize="12"
-                                       Foreground="#667085" />
-                            <TextBox Text="{Binding DestinationPath}"
-                                     Watermark="Leave empty for the default download folder" />
+                                <TextBlock Text="Destination directory" FontSize="12"
+                                           Foreground="#667085" />
+                                <TextBox Text="{Binding DestinationPath}"
+                                         Watermark="Leave empty for the default download folder" />
 
-                            <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,3,0,0">
-                                <Button Content="Wait for transfer"
-                                        Command="{Binding WaitForTransferCommand}" />
-                                <Button Content="Send file" Background="#0B47C9"
-                                        Foreground="White"
-                                        Command="{Binding SendFileCommand}" />
-                                <Button Content="Loopback self test"
-                                        Command="{Binding RunLoopbackTestCommand}" />
-                                <Button Content="Cancel" Foreground="#B42318"
-                                        Command="{Binding CancelCommand}" />
-                            </StackPanel>
+                                <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,3,0,0">
+                                    <Button Content="Wait for transfer"
+                                            Command="{Binding WaitForTransferCommand}" />
+                                    <Button Content="Send file" Background="#0B47C9"
+                                            Foreground="White"
+                                            Command="{Binding SendFileCommand}" />
+                                    <Button Content="Loopback self test"
+                                            Command="{Binding RunLoopbackTestCommand}" />
+                                    <Button Content="Cancel" Foreground="#B42318"
+                                            Command="{Binding CancelCommand}" />
+                                </StackPanel>
 
                             <StackPanel Orientation="Horizontal" Spacing="9" Margin="0,4,0,2">
                                 <Border Width="3" Height="15" CornerRadius="2"
@@ -129,47 +133,132 @@
                                            Foreground="#0B47C9" VerticalAlignment="Center" />
                             </StackPanel>
                             <Border Height="1" Background="#E6EBF4" Margin="0,0,0,6" />
-                            <StackPanel Orientation="Horizontal" Spacing="18">
-                                <TextBlock Text="{Binding StatusText}" Foreground="#667085" />
-                                <TextBlock Text="{Binding SpeedText}" Foreground="#667085" />
+                                <StackPanel Orientation="Horizontal" Spacing="18">
+                                    <TextBlock Text="{Binding StatusText}" Foreground="#667085" />
+                                    <TextBlock Text="{Binding SpeedText}" Foreground="#667085" />
+                                </StackPanel>
+
+                                <ProgressBar Minimum="0" Maximum="100"
+                                             Value="{Binding ProgressPercent}"
+                                             Height="10" Foreground="#0B47C9" />
+                                <ListBox Height="86" ItemsSource="{Binding Devices}" />
+
                             </StackPanel>
+                        </ScrollViewer>
+                    </Border>
+                </TabItem>
 
-                            <ProgressBar Minimum="0" Maximum="100"
-                                         Value="{Binding ProgressPercent}"
-                                         Height="10" Foreground="#0B47C9" />
-                            <ListBox Height="86" ItemsSource="{Binding Devices}" />
+                <TabItem Header="About">
+                    <Border Margin="20" Padding="26" Background="White"
+                            CornerRadius="14" BoxShadow="0 6 22 0 #1E1B2430">
+                        <ScrollViewer>
+                            <StackPanel Spacing="11">
 
-                        </StackPanel>
-                    </ScrollViewer>
+                            <StackPanel Orientation="Horizontal" Spacing="9" Margin="0,4,0,2">
+                                <Border Width="3" Height="15" CornerRadius="2"
+                                        Background="#0B47C9" VerticalAlignment="Center" />
+                                <TextBlock Text="About / 关于" FontSize="15" FontWeight="SemiBold"
+                                           Foreground="#0B47C9" VerticalAlignment="Center" />
+                            </StackPanel>
+                            <Border Height="1" Background="#E6EBF4" Margin="0,0,0,6" />
+                                <TextBlock Text="{Binding AboutText}" TextWrapping="Wrap"
+                                           FontSize="13" Foreground="#1B2430" />
+
+                            <StackPanel Orientation="Horizontal" Spacing="9" Margin="0,4,0,2">
+                                <Border Width="3" Height="15" CornerRadius="2"
+                                        Background="#0B47C9" VerticalAlignment="Center" />
+                                <TextBlock Text="License / 许可全文" FontSize="15" FontWeight="SemiBold"
+                                           Foreground="#0B47C9" VerticalAlignment="Center" />
+                            </StackPanel>
+                            <Border Height="1" Background="#E6EBF4" Margin="0,0,0,6" />
+                                <Border Background="#F7F9FD" CornerRadius="8"
+                                        BorderBrush="#E6EBF4" BorderThickness="1" Padding="12">
+                                    <ScrollViewer Height="300">
+                                        <TextBlock Text="{Binding LicenseText}"
+                                                   TextWrapping="Wrap" FontSize="11"
+                                                   Foreground="#1B2430" />
+                                    </ScrollViewer>
+                                </Border>
+
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Border>
+                </TabItem>
+
+            </TabControl>
+        </Grid>
+
+        <!-- Standalone first-run license page. It is a sibling of the main
+             shell, not an overlay: exactly one of the two pages is visible. -->
+        <Grid IsVisible="{Binding LicensePending}" RowDefinitions="Auto,*"
+              Background="#F2F5FB">
+        <!-- Brand bar, shared by every standalone page. -->
+        <Border Grid.Row="0" Height="72">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="#0B47C9" Offset="0" />
+                    <GradientStop Color="#3A82F0" Offset="1" />
+                </LinearGradientBrush>
+            </Border.Background>
+            <Grid ColumnDefinitions="*,Auto" Margin="24,0">
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="14"
+                            VerticalAlignment="Center">
+                    <Border Width="38" Height="38" CornerRadius="10"
+                            Background="White" VerticalAlignment="Center">
+                        <Viewbox Margin="2">
+                            <Canvas Width="108" Height="108">
+                                <Rectangle Width="108" Height="108" RadiusX="24" RadiusY="24">
+                                    <Rectangle.Fill>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                            <GradientStop Color="#0B47C9" Offset="0" />
+                                            <GradientStop Color="#3A82F0" Offset="1" />
+                                        </LinearGradientBrush>
+                                    </Rectangle.Fill>
+                                </Rectangle>
+                                <Path Data="M33 42 H75" Stroke="White" StrokeThickness="7"
+                                      StrokeLineCap="Round" />
+                                <Path Data="M68 35 L77 42 L68 49" Stroke="White"
+                                      StrokeThickness="7" StrokeLineCap="Round"
+                                      StrokeJoin="Round" />
+                                <Path Data="M75 66 H33" Stroke="White" StrokeThickness="7"
+                                      StrokeLineCap="Round" />
+                                <Path Data="M40 59 L31 66 L40 73" Stroke="White"
+                                      StrokeThickness="7" StrokeLineCap="Round"
+                                      StrokeJoin="Round" />
+                                <Path Data="M57 47 L47 59 H54 L50 70 L64 55 H56 Z"
+                                      Fill="#FFD84D" />
+                            </Canvas>
+                        </Viewbox>
+                    </Border>
+                    <StackPanel Spacing="1" VerticalAlignment="Center">
+                        <TextBlock Text="FlashDraft" FontSize="20" FontWeight="SemiBold"
+                                   Foreground="White" />
+                        <TextBlock Text="LAN and Internet file transfer" FontSize="11"
+                                   Foreground="#D6E6FF" />
+                    </StackPanel>
+                </StackPanel>
+                <Border Grid.Column="1" Background="#33FFFFFF" CornerRadius="14"
+                        Padding="12,7" VerticalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                        <Border Width="8" Height="8" CornerRadius="4" Background="#6EE7A8"
+                                VerticalAlignment="Center" />
+                        <TextBlock Text="Ready" FontSize="12" Foreground="White" />
+                    </StackPanel>
                 </Border>
-            </TabItem>
+            </Grid>
+        </Border>
 
-            <TabItem Header="About">
-                <Border Margin="20" Padding="26" Background="White"
-                        CornerRadius="14" BoxShadow="0 6 22 0 #1E1B2430">
-                    <ScrollViewer>
-                        <TextBlock Text="{Binding AboutText}" TextWrapping="Wrap"
-                                   FontSize="13" Foreground="#1B2430" />
-                    </ScrollViewer>
-                </Border>
-            </TabItem>
-        </TabControl>
-
-        <!-- First-run license gate. The main window still starts normally; the
-             overlay blocks interaction until the user accepts. -->
-        <Border Grid.RowSpan="2" IsVisible="{Binding LicensePending}"
-                Background="#990B1220">
-            <Border Margin="36" Padding="24" Background="White" CornerRadius="14"
-                    MaxWidth="760" MinWidth="520"
-                    HorizontalAlignment="Center" VerticalAlignment="Center"
-                    BoxShadow="0 10 40 0 #33000000">
-                <Grid RowDefinitions="Auto,*,Auto,Auto">
+            <Border Grid.Row="1" Margin="36" Padding="26" Background="White"
+                    CornerRadius="14" BoxShadow="0 10 40 0 #33000000"
+                    MaxWidth="860" HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+                <Grid RowDefinitions="Auto,*,Auto,Auto" MinHeight="420">
                     <TextBlock Grid.Row="0" Text="License Agreement / 许可协议"
                                FontSize="18" FontWeight="SemiBold" Foreground="#0B47C9"
                                Margin="0,0,0,12" />
                     <Border Grid.Row="1" Background="#F7F9FD" CornerRadius="8"
                             BorderBrush="#E6EBF4" BorderThickness="1" Padding="12">
-                        <ScrollViewer Height="260">
+                        <ScrollViewer>
                             <TextBlock Text="{Binding LicenseText}" TextWrapping="Wrap"
                                        FontSize="11" Foreground="#1B2430" />
                         </ScrollViewer>
@@ -188,6 +277,7 @@
                     </StackPanel>
                 </Grid>
             </Border>
-        </Border>
+        </Grid>
+
     </Grid>
 </UserControl>

@@ -29,6 +29,7 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty] private string _speedText = "0 B/s";
     [ObservableProperty] private string _statusText = "Idle";
     [ObservableProperty] private bool _licensePending = !LicenseGate.IsAccepted();
+    [ObservableProperty] private bool _mainVisible = LicenseGate.IsAccepted();
     [ObservableProperty] private bool _licenseAccepted;
 
     private readonly SessionOrchestrator _orchestrator = new();
@@ -56,8 +57,8 @@ public partial class MainViewModel : ObservableObject
 
     public IProgress<ProgressSnapshot> Progress { get; }
 
-    /// <summary>The About page also re-displays the full license for review.</summary>
-    public string AboutText => AboutNotice.Text + "\n\n" + LicenseContent.Text;
+    /// <summary>Standalone About page: short notice plus the full license.</summary>
+    public string AboutText => LicenseContent.Notice;
 
     public string LicenseText => LicenseContent.Text;
 
@@ -67,6 +68,7 @@ public partial class MainViewModel : ObservableObject
         if (!LicenseAccepted) return;
         LicenseGate.MarkAccepted();
         LicensePending = false;
+        MainVisible = true;
     }
 
     [RelayCommand]
@@ -298,7 +300,5 @@ public partial class MainViewModel : ObservableObject
 /// </summary>
 public static class AboutNotice
 {
-    public const string Text =
-        "FlashDraft's user interface design is inspired by Plain Craft Launcher (PCL) by 龙腾猫跃 (Meloong-Git/PCL). This project contains no PCL source code, images, logos, or fonts. FlashDraft is an independent file-transfer tool and is not affiliated with, endorsed by, or officially related to PCL or its author. PCL and all related rights remain with the original author. See https://github.com/Meloong-Git/PCL/blob/main/LICENCE.\n\n" +
-        "FlashDraft 的界面设计受龙腾猫跃的 Plain Craft Launcher (PCL) 启发。本项目不包含 PCL 的源代码、图片、Logo 或字体。FlashDraft 是独立的文件传输工具，与 PCL 及其作者无关联、非官方作品、未获其背书。PCL 及相关权利归原作者所有。参见 https://github.com/Meloong-Git/PCL/blob/main/LICENCE。";
+    public const string Text = LicenseContent.Notice;
 }

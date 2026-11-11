@@ -6,6 +6,11 @@ namespace FlashDraft.App;
 /// <summary>Readable license text shown at first launch and on the About page.</summary>
 public static class LicenseContent
 {
+    /// <summary>Short bilingual notice shown on the standalone About page.</summary>
+    public const string Notice =
+        "FlashDraft's UI design is inspired by PCL by 龙腾猫跃 (Meloong), with the author's explicit permission. Independent file-transfer tool, not affiliated with PCL. No PCL source, XAML, images, logos or fonts are used.\n\n" +
+        "界面观感参考 PCL（作者 龙腾猫跃 / Meloong），已获作者明确许可；本作品与 PCL 无官方关联、非官方作品，未使用 PCL 的源代码、XAML、图片、Logo 或字体。";
+
     public const string Text = """
 FlashDraft 0.1.2  |  License Agreement / 许可协议
 Copyright 2026 rainbowcrr-sys
