@@ -315,5 +315,6 @@ public partial class MainViewModel : ObservableObject
 /// </summary>
 public static class AboutNotice
 {
-    public const string Text = LicenseContent.Notice;
+    /// <summary>Follows the language selected in Settings / by the installer.</summary>
+    public static string Text => Loc.Notice();
 }
